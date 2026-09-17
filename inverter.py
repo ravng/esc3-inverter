@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""ESC3-5K/ESC3-5KW-DS inverter Modbus/TCP utility.
-By Emile 2026 (www.sixbynine.no)
-
-The inverter uses standard Modbus/TCP, Unit ID 1, port 502, and zero-based
-register offsets as described ESC3-5KW-DS documentation.
-"""
+"""ESC3-5K/ESC3-5KW-DS inverter Modbus/TCP utility, By Emile (www.sixbynine.no). GitHub: https://github.com/ravng/esc3-inverter"""
 
 from __future__ import annotations
 
@@ -339,7 +334,6 @@ def list_registers(as_json: bool) -> None:
 
 
 def main() -> int:
-    print("ESC3 Hybrid inverter communication tool.\nBy Emilie (www.sixbynine.no)\nGit repo: https://github.com/ravng/esc3-inverter\n")
     parser = argparse.ArgumentParser(add_help=False, description=__doc__)
     parser.add_argument("--help", action="help", help="Show this help message and exit")
     parser.add_argument("-r", metavar="X", help="Read register name(s), comma separated")
