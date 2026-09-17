@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""""""ESC3-5K/ESC3-5KW-DS inverter Modbus/TCP utility.
+"""ESC3-5K/ESC3-5KW-DS inverter Modbus/TCP utility.
 By Emile 2026 (www.sixbynine.no)
 
 The inverter uses standard Modbus/TCP, Unit ID 1, port 502, and zero-based
@@ -170,7 +170,7 @@ _input = [
     ("GridFrequency", 0x04, "uint16", 0.01, "Hz"),
     ("PvVoltage1", 0x05, "uint16", 0.1, "V"), ("PvVoltage2", 0x06, "uint16", 0.1, "V"),
     ("PvCurrent1", 0x07, "uint16", 0.1, "A"), ("PvCurrent2", 0x08, "uint16", 0.1, "A"),
-    ("Temperature", 0x09, "int16", 1, "°C"), ("RunMode", 0x0A, "uint16", 1, ""),
+    ("Temperature", 0x09, "int16", 1, "°C"), ("RunMode 0=Waiting, 1=Init, 2=Normal, 3=Fault, 4=Permanent fault, 5=Update, 6=EPS, 7=Self test, 8=Idle", 0x0A, "uint16", 1, ""),
     ("Powerdc1", 0x0B, "uint16", 1, "W"), ("Powerdc2", 0x0C, "uint16", 1, "W"),
     ("TemperFaultValue", 0x0D, "int16", 1, "°C"), ("Pv1VoltFaultValue", 0x0E, "uint16", 0.1, "V"),
     ("Pv2VoltFaultValue", 0x0F, "uint16", 0.1, "V"), ("GfciFaultValue", 0x10, "uint16", 1, "mA"),
