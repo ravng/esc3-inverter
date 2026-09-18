@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ESC3-5K / ESC3-5KW-DS inverter Modbus/TCP utility."""
+"""ESC3-5K / ESC3-5KW-DS inverter Modbus/TCP utility. By Emilie (www.sixbynine.no) Git: https://github.com/ravng/esc3-inverter"""
 from __future__ import annotations
 
 import argparse
@@ -317,12 +317,12 @@ def main() -> int:
     p.add_argument("-r", metavar="X", help="Read register name(s), comma separated")
     p.add_argument("-w", nargs=2, metavar=("X", "Y"), help="Write value Y to register X")
     p.add_argument("-h", dest="host", help="Inverter IP address or hostname")
-    p.add_argument("-P", type=int, default=DEFAULT_PORT, help="TCP port")
-    p.add_argument("-p", type=int, default=None, help="Unlock PIN")
-    p.add_argument("-j", "--json", action="store_true")
-    p.add_argument("--list", action="store_true")
-    p.add_argument("-v", "--verbose", action="store_true")
-    p.add_argument("-t", type=float, default=DEFAULT_TIMEOUT)
+    p.add_argument("-P", type=int, default=DEFAULT_PORT, help="TCP port 502")
+    p.add_argument("-p", type=int, default=None, help="Unlock PIN, default 1919")
+    p.add_argument("-j", "--json", action="store_true", help="Output json formated")
+    p.add_argument("--list", action="store_true", help="List known registers")
+    p.add_argument("-v", "--verbose", action="store_true", help="Show raw modbus messages")
+    p.add_argument("-t", type=float, default=DEFAULT_TIMEOUT, help="Timeout in seconds")
     args = p.parse_args()
     if args.list:
         list_registers(args.json); return 0
