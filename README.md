@@ -128,13 +128,6 @@ Most writable holding registers require the inverter to be unlocked first. Suppl
   -p 1919 -h 10.0.1.40
 ```
 
-Enable the option to allow remaining solar power to feed into the grid:
-
-```bash
-./inverter.py -w AllowSolarMaxUse 1 \
-  -p 1919 -h 10.0.1.40
-```
-
 Set the language to German:
 
 ```bash
@@ -159,12 +152,6 @@ List all registers known to the tool:
 ./inverter.py --list
 ```
 
-List them as JSON:
-
-```bash
-./inverter.py --list -j
-```
-
 The list includes the variable name, access mode, function code, register address, length, data type, scale, unit, and description where available.
 
 Register names are case-sensitive unless the script's alias handling says otherwise. Use the names shown by `--list`.
@@ -180,24 +167,21 @@ Register names are case-sensitive unless the script's alias handling says otherw
 | `ModuleName` | `0x11` | Read | Module name |
 | `Machine_Type` | `0x19` | Read | Machine type |
 | `MyAddress` | `0x1A` | Read/write | Machine address |
-| `Language` | `0x1B` | Read/write | `0` English, `1` German |
-| `IP_Method` | `0x1C` | Read/write | `0` DHCP, `1` manual |
+| `Language` | `0x1B` | Read/write | 0=English, 1=German |
+| `IP_Method` | `0x1C` | Read/write | 0=Dhcp, 1=Static |
 | `Machine_switch` | `0x1D` | Read | Software and hardware switch state |
-| `Safety` | `0x1F` | Read/write | Grid safety profile |
-| `PvConnectionMode` | `0x20` | Read/write | PV input mode |
-| `SolarChargerUseMode` | `0xB9` | Read/write | Operating mode |
-| `Allow_Grid_Charge` | `0xBA` | Read/write | Grid-charging permissions |
+| `Safety` | `0x1F` | Read/write | Grid safety profile, refer manual |
+| `PvConnectionMode` | `0x20` | Read/write | PV input mode: 0=No solar, 1=Two strings in parallel, 2=Two strings parallell independent |
+| `SolarChargerUseMode` | `0xB9` | Read/write | Operating mode: 0: Self use mode, 1=ForceTimeUse, 2=ExternalUse, 3=BackupUse, 4=FFR, 5=RemoteControl |
+| `Allow_Grid_Charge` | `0xBA` | Read/write | Grid-charging permissions, 0=No, 1=Allow period 1, 2=Allow period 2, 3=Allow |
 | `Export_control_user_limit` | `0xBC` | Read/write | User export limit |
-| `Battery1Type` | `0xD7` | Read/write | Battery type |
+| `Battery1Type` | `0xD7` | Read/write | Battery type: 0=Lead acid, 1=Lithium |
 | `Battery_Health` | `0xDE` | Read | Battery health |
 | `BackUp_GridChargeFlag` | `0x110` | Read/write | Allow grid charging in backup mode |
 | `AllowSolarMaxUse` | `0x120` | Read/write | Allow remaining solar power to feed into the grid |
-
-The tool uses `IP_Method` with an underscore so it can be used directly from the command line.
-
+| `wRemoteChargeSubMode` | `0x11c` | Read/write | Mode: 0=Charge only from solar, 1=Charge, 2=4, 3=Discharge, 4=Charge/Discharge as set by 0x11d, 9=Self use |
+| `wRemoteChargerPowerSet` | `0x11d` | Read/write | Watt to charge (postive) or discharge (negative) |
 ### Input registers
-
-Input registers use function `0x04` and have a separate, zero-based address space:
 
 | Name | Address | Description |
 |---|---:|---|
@@ -231,45 +215,5 @@ Input registers use function `0x04` and have a separate, zero-based address spac
 
 Use `./inverter.py --list` for the complete register list, including charger 2–4 registers, fault messages, firmware values, energy counters, and protection parameters.
 
-## Protocol details
-
-The tool communicates using Modbus/TCP:
-
-- TCP server: inverter
-- Default TCP port: `502`
-- Unit ID: `1`
-- Holding-register reads: function `0x03`
-- Input-register reads: function `0x04`
-- Single-register writes: function `0x06`
-- Unlock PIN: normally decimal `1919`
-
-The holding-register addresses and input-register addresses are not interchangeable. For example:
-
-```text
-Temperature holding-style address: 0x0309 in the register sheet
-Temperature Modbus/TCP input offset: 0x0009
-```
-
-Function `0x04` must use the input-register offset `0x0009` for `Temperature`.
-
-## Troubleshooting
-
-### `argument -h: conflicting option string`
-
-Use the current script version. It reserves `-h` for the inverter host and uses `--help` for help:
-
-```bash
-./inverter.py --help
-```
-
-### `Modbus exception 0x03`
-
-This normally indicates an invalid address area. Check that the register is being accessed with the correct function code. Input registers must use function `0x04` offsets, not the `0x0300` holding-style addresses.
-
-For example, `Temperature` must generate a request containing address `00 09`:
-
-```text
-01 04 00 09 00 01
-```
 
 
